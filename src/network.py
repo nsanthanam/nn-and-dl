@@ -34,6 +34,7 @@ class Network(object):
         self.biases = [np.random.randn(y, 1) for y in sizes[1:]]
         self.weights = [np.random.randn(y, x)
                         for x, y in zip(sizes[:-1], sizes[1:])]
+        self.epoch_accuracy = []
 
     def feedforward(self, a):
         """Return the output of the network if ``a`` is input."""
@@ -124,7 +125,9 @@ class Network(object):
         neuron in the final layer has the highest activation."""
         test_results = [(np.argmax(self.feedforward(x)), y)
                         for (x, y) in test_data]
-        return sum(int(x == y) for (x, y) in test_results)
+        num_correct = sum(int(x == y) for (x, y) in test_results)
+        self.epoch_accuracy.append(num_correct*1.0/len(test_data))
+        return num_correct
 
     def cost_derivative(self, output_activations, y):
         """Return the vector of partial derivatives \partial C_x /
